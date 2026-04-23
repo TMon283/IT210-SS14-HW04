@@ -1,0 +1,8 @@
+|---------------------|--------------------------------------|-----------------------------------|
+|       Tiêu chí      | Giải pháp 1: Pending + Transaction   |    Giải pháp 2: Scheduled Task    |
+|------------------------------------------------------------|-----------------------------------|
+| Tốc độ xử lý        | Nhanh, vì trừ kho ngay               | Chậm hơn, cần job quét            |
+| Độ an toàn dữ liệu  | Cao, vì kho luôn khớp                | Cao, nhưng phụ thuộc job          |
+| Tài nguyên bộ nhớ   | Ít tốn, transaction ngắn             | Tốn thêm tài nguyên cho scheduler |
+| Độ phức tạp code    | Trung bình                           | Cao hơn, cần job quản lý          |
+|---------------------|--------------------------------------|-----------------------------------|

@@ -1,0 +1,17 @@
+- Input: Khách hàng thêm sản phẩm vào giỏ và nhấn 'Checkout'
+- Output:
+    + Nếu thanh toán trong 15p -> đơn hàng hoàn tất, trừ kho vĩnh viễn
+    + Nếu quá 15p hoặc hủy -> hệ thống tự động hoàn kho
+- Vấn đề:
+    + Nếu dùng transaction kéo dài 15p -> gây deadlock, chiếm lock quá lâu
+    + Nếu sản phẩm bị xóa hoặc session timeout -> cần xử lí ngoại lệ để không thất thoát dữ liệu
+- Giải pháp 1: Transaction + trạng thái Pending
+    + Khi checkout, tạo Order với status="PENDING"
+    + Trừ kho ngay trong transaction
+    + Nếu thanh toán thành công trong 15p -> cập nhật trạng thái thành 'PAID'
+    + Nếu hết hạn hoặc hủy -> rollback bằng cách cộng lại stock
+- Giải pháp 2: Hibernate Interceptor
+    + Khi checkout, tạo Order với status="RESERVED" nhưng chưa trừ kho
+    + Dùng Scheduled Task quét các đơn hàng quá hạn 15p
+    + Nếu thanh toán thành công -> trừ kho
+    + Nếu hết hạn -> hủy đơn hàng, không trừ kho hoặc hoàn lại kho nếu đã trừ
